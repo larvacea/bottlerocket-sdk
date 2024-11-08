@@ -1,0 +1,56 @@
+From 09b33d37d54d96dc6eab6df2375f6492ba8d6cf8 Mon Sep 17 00:00:00 2001
+From: Martin Harriman <larvacea@mac.com>
+Date: Mon, 11 Nov 2024 19:50:15 +0000
+Subject: [PATCH 2/2] Silence compiler errors
+
+Silence compiler errors from passing fclose as a deleter to
+std::unique_ptr (backported from aws-lc main branch). No functional
+change: this defines and uses a function object wrapping fclose to
+silence the compiler errors.
+---
+ ssl/test/settings_writer.cc | 7 +++++--
+ ssl/test/ssl_transfer.cc    | 9 +++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/ssl/test/settings_writer.cc b/ssl/test/settings_writer.cc
+index 8605222fe..78598a869 100644
+--- a/ssl/test/settings_writer.cc
++++ b/ssl/test/settings_writer.cc
+@@ -75,8 +75,11 @@ bool SettingsWriter::Commit() {
+   }
+   bssl::UniquePtr<uint8_t> free_settings(settings);
+ 
+-  using ScopedFILE = std::unique_ptr<FILE, decltype(&fclose)>;
+-  ScopedFILE file(fopen(path_.c_str(), "w"), fclose);
++  struct FileCloser {
++    void operator()(FILE *f) const { fclose(f); }
++  };
++  using ScopedFILE = std::unique_ptr<FILE, FileCloser>;
++  ScopedFILE file(fopen(path_.c_str(), "w"));
+   if (!file) {
+     return false;
+   }
+diff --git a/ssl/test/ssl_transfer.cc b/ssl/test/ssl_transfer.cc
+index 64bae3c28..d1d43955f 100644
+--- a/ssl/test/ssl_transfer.cc
++++ b/ssl/test/ssl_transfer.cc
+@@ -21,9 +21,14 @@ static bool WriteData(std::string prefix, const uint8_t *input, size_t len) {
+     // WriteData is not needed because related config is not enabled.
+     return true;
+   }
+-  using ScopedFILE = std::unique_ptr<FILE, decltype(&fclose)>;
++
++  struct FileCloser {
++    void operator()(FILE *f) const { fclose(f); }
++  };
++
++  using ScopedFILE = std::unique_ptr<FILE, FileCloser>;
+   std::string path = prefix + "-" + std::to_string(rand());
+-  ScopedFILE file(fopen(path.c_str(), "w"), fclose);
++  ScopedFILE file(fopen(path.c_str(), "w"));
+   if (!file) {
+     return false;
+   }
+-- 
+2.40.1
+

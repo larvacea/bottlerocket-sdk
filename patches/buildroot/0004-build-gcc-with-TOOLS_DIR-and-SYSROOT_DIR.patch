@@ -1,7 +1,7 @@
-From 37b4493d05be97ecec83d814e65e77a2d11631d2 Mon Sep 17 00:00:00 2001
-From: Ben Cressey <bcressey@amazon.com>
-Date: Sun, 6 Aug 2017 23:58:27 +0000
-Subject: [PATCH] build gcc with TOOLS_DIR and SYSROOT_DIR
+From 88bd02e82312c201cf94dcfd7401621766b42b9f Mon Sep 17 00:00:00 2001
+From: Martin Harriman <larvacea@mac.com>
+Date: Mon, 4 Nov 2024 22:59:29 +0000
+Subject: [PATCH 4/6] build gcc with TOOLS_DIR and SYSROOT_DIR
 
 Most of the changes here are to the second and final stage of our GCC
 build, so that the binaries are written to the new output path, and
@@ -22,16 +22,31 @@ We also enable pie and ssp by default.
 
 Signed-off-by: Ben Cressey <bcressey@amazon.com>
 ---
- package/gcc/gcc-final/gcc-final.mk     | 56 +++++++++++++++++++-------
+ package/busybox/busybox.mk             |  2 +-
+ package/gcc/gcc-final/gcc-final.mk     | 54 +++++++++++++++++++-------
  package/gcc/gcc-initial/gcc-initial.mk |  3 ++
  package/gcc/gcc.mk                     |  2 +-
- 3 files changed, 46 insertions(+), 15 deletions(-)
+ package/pkg-generic.mk                 |  3 +-
+ 5 files changed, 47 insertions(+), 17 deletions(-)
 
+diff --git a/package/busybox/busybox.mk b/package/busybox/busybox.mk
+index eb5e7ad922..99d60d1343 100644
+--- a/package/busybox/busybox.mk
++++ b/package/busybox/busybox.mk
+@@ -16,7 +16,7 @@ BUSYBOX_CPE_ID_VENDOR = busybox
+ BUSYBOX_IGNORE_CVES += CVE-2022-28391
+ 
+ BUSYBOX_CFLAGS = \
+-	$(TARGET_CFLAGS)
++	$(TARGET_CFLAGS) -DMB_LEN_MAX=16
+ 
+ BUSYBOX_LDFLAGS = \
+ 	$(TARGET_LDFLAGS)
 diff --git a/package/gcc/gcc-final/gcc-final.mk b/package/gcc/gcc-final/gcc-final.mk
-index aa883beb7b..0f61ff0df1 100644
+index 99d7047b5f..0803405e13 100644
 --- a/package/gcc/gcc-final/gcc-final.mk
 +++ b/package/gcc/gcc-final/gcc-final.mk
-@@ -45,9 +45,16 @@ define HOST_GCC_FINAL_CONFIGURE_CMDS
+@@ -54,9 +54,16 @@ define HOST_GCC_FINAL_CONFIGURE_CMDS
  		LDFLAGS="$(HOST_LDFLAGS)" \
  		$(HOST_GCC_FINAL_CONF_ENV) \
  		./configure \
@@ -46,11 +61,11 @@ index aa883beb7b..0f61ff0df1 100644
 +		--with-build-sysroot=$(STAGING_DIR) \
 +		--with-gcc-major-version-only \
 +		--enable-default-pie \
-+		--enable-default-ssp \
++		--enable-default=ssp \
  		$(QUIET) $(HOST_GCC_FINAL_CONF_OPTS) \
  	)
  endef
-@@ -68,12 +75,12 @@ HOST_GCC_FINAL_CONF_OPTS = \
+@@ -77,12 +84,12 @@ HOST_GCC_FINAL_CONF_OPTS = \
  # doesn't use floating point operations.
  ifeq ($(BR2_sh4)$(BR2_sh4eb),y)
  HOST_GCC_FINAL_CONF_OPTS += "--with-multilib-list=m4,m4-nofpu"
@@ -62,11 +77,11 @@ index aa883beb7b..0f61ff0df1 100644
 +HOST_GCC_FINAL_GCC_LIB_DIR = $(TOOLS_DIR)/usr/$(GNU_TARGET_NAME)/lib/!m4*
  else
 -HOST_GCC_FINAL_GCC_LIB_DIR = $(HOST_DIR)/$(GNU_TARGET_NAME)/lib*
-+HOST_GCC_FINAL_GCC_LIB_DIR = $(TOOLS_DIR)/usr/$(GNU_TARGET_NAME)/lib*
++HOST_GCC_FINAL_GCC_LIB_DIR = $(TOOLS_DIR)/$(GNU_TARGET_NAME)/sys-root/usr/lib*
  endif
  
  ifeq ($(BR2_GCC_SUPPORTS_LIBCILKRTS),y)
-@@ -88,7 +95,7 @@ ifeq ($(BR2_PTHREADS_NONE),y)
+@@ -97,7 +104,7 @@ ifeq ($(BR2_PTHREADS_NONE),y)
  HOST_GCC_FINAL_CONF_OPTS += --disable-libcilkrts
  endif
  
@@ -75,20 +90,18 @@ index aa883beb7b..0f61ff0df1 100644
  # disable libcilkrts as there is no static version
  HOST_GCC_FINAL_CONF_OPTS += --disable-libcilkrts
  endif
-@@ -96,10 +103,8 @@ endif
- endif # BR2_GCC_SUPPORTS_LIBCILKRTS
+@@ -106,9 +113,7 @@ endif # BR2_GCC_SUPPORTS_LIBCILKRTS
  
  # Disable shared libs like libstdc++ if we do static since it confuses linking
--ifeq ($(BR2_STATIC_LIBS),y)
+ ifeq ($(BR2_STATIC_LIBS),y)
 -HOST_GCC_FINAL_CONF_OPTS += --disable-shared
 -else
 -HOST_GCC_FINAL_CONF_OPTS += --enable-shared
-+ifeq (y,y)
-+HOST_GCC_FINAL_CONF_OPTS += --enable-shared=libgcc,libstdc++
++HOST_GCC_FINAL_CONF_OPTS += --enable-shared=libgcc,libstd++
  endif
  
  ifeq ($(BR2_GCC_ENABLE_OPENMP),y)
-@@ -118,22 +123,27 @@ HOST_GCC_FINAL_CONF_ENV = \
+@@ -127,22 +132,27 @@ HOST_GCC_FINAL_CONF_ENV = \
  
  HOST_GCC_FINAL_MAKE_OPTS += $(HOST_GCC_COMMON_MAKE_OPTS)
  
@@ -117,35 +130,28 @@ index aa883beb7b..0f61ff0df1 100644
  HOST_GCC_FINAL_POST_INSTALL_HOOKS += HOST_GCC_INSTALL_WRAPPER_AND_SIMPLE_SYMLINKS
 +endif
  
- # coldfire is not working without removing these object files from libgcc.a
- ifeq ($(BR2_m68k_cf),y)
-@@ -146,6 +156,7 @@ endif
+ GCC_FINAL_LIBS =
  
- # Cannot use the HOST_GCC_FINAL_USR_LIBS mechanism below, because we want
- # libgcc_s to be installed in /lib and not /usr/lib.
-+ifeq (y,)
- define HOST_GCC_FINAL_INSTALL_LIBGCC
- 	-cp -dpf $(HOST_GCC_FINAL_GCC_LIB_DIR)/libgcc_s* \
- 		$(STAGING_DIR)/lib/
-@@ -154,6 +165,7 @@ define HOST_GCC_FINAL_INSTALL_LIBGCC
- endef
- 
- HOST_GCC_FINAL_POST_INSTALL_HOOKS += HOST_GCC_FINAL_INSTALL_LIBGCC
-+endif
- 
- define HOST_GCC_FINAL_INSTALL_LIBATOMIC
- 	-cp -dpf $(HOST_GCC_FINAL_GCC_LIB_DIR)/libatomic* \
-@@ -197,7 +209,7 @@ define HOST_GCC_FINAL_INSTALL_STATIC_LIBS
- 	done
+@@ -179,7 +189,7 @@ GCC_FINAL_USR_LIBS += $(call qstrip,$(BR2_TOOLCHAIN_EXTRA_LIBS))
+ define GCC_FINAL_INSTALL_STAGING_CMDS
+ 	$(foreach lib,$(GCC_FINAL_LIBS), \
+ 		cp -dpf $(HOST_GCC_FINAL_GCC_LIB_DIR)/$(lib)* \
+-			$(STAGING_DIR)/lib/
++			$(STAGING_DIR)/usr/lib/
+ 	)
+ 	$(foreach lib,$(GCC_FINAL_USR_LIBS), \
+ 		cp -dpf $(HOST_GCC_FINAL_GCC_LIB_DIR)/$(lib)* \
+@@ -187,7 +197,7 @@ define GCC_FINAL_INSTALL_STAGING_CMDS
+ 	)
  endef
  
 -ifeq ($(BR2_STATIC_LIBS),)
 +ifeq (y,)
- define HOST_GCC_FINAL_INSTALL_SHARED_LIBS
- 	for i in $(HOST_GCC_FINAL_USR_LIBS) ; do \
- 		cp -dpf $(HOST_GCC_FINAL_GCC_LIB_DIR)/$${i}.so* \
-@@ -216,4 +228,20 @@ endef
- HOST_GCC_FINAL_POST_INSTALL_HOOKS += HOST_GCC_FINAL_INSTALL_USR_LIBS
+ define GCC_FINAL_INSTALL_TARGET_CMDS
+ 	mkdir -p $(TARGET_DIR)/lib $(TARGET_DIR)/usr/lib
+ 	$(foreach lib,$(GCC_FINAL_LIBS), \
+@@ -210,5 +220,21 @@ endef
+ GCC_FINAL_POST_INSTALL_STAGING_HOOKS += HOST_GCC_FINAL_M68K_LIBGCC_FIXUP
  endif
  
 +define HOST_GCC_FINAL_TOOLS_DIR_CLEANUP
@@ -164,12 +170,13 @@ index aa883beb7b..0f61ff0df1 100644
 +HOST_GCC_FINAL_POST_INSTALL_HOOKS += HOST_GCC_FINAL_TOOLS_DIR_CLEANUP
 +HOST_GCC_FINAL_POST_INSTALL_HOOKS += HOST_GCC_FINAL_TOOLS_DIR_SYSROOT
 +
+ $(eval $(generic-package))
  $(eval $(host-autotools-package))
 diff --git a/package/gcc/gcc-initial/gcc-initial.mk b/package/gcc/gcc-initial/gcc-initial.mk
-index ebd8e8f017..ec9fcd13c1 100644
+index 1f8b76a942..6188710a01 100644
 --- a/package/gcc/gcc-initial/gcc-initial.mk
 +++ b/package/gcc/gcc-initial/gcc-initial.mk
-@@ -34,6 +34,7 @@ HOST_GCC_INITIAL_CONF_OPTS = \
+@@ -36,6 +36,7 @@ HOST_GCC_INITIAL_CONF_OPTS = \
  	$(HOST_GCC_COMMON_CONF_OPTS) \
  	--enable-languages=c \
  	--disable-shared \
@@ -177,7 +184,7 @@ index ebd8e8f017..ec9fcd13c1 100644
  	--without-headers \
  	--disable-threads \
  	--with-newlib \
-@@ -53,9 +54,11 @@ endif
+@@ -55,9 +56,11 @@ endif
  HOST_GCC_INITIAL_MAKE_OPTS = $(HOST_GCC_COMMON_MAKE_OPTS) all-gcc all-target-libgcc
  HOST_GCC_INITIAL_INSTALL_OPTS = install-gcc install-target-libgcc
  
@@ -190,10 +197,10 @@ index ebd8e8f017..ec9fcd13c1 100644
  
  $(eval $(host-autotools-package))
 diff --git a/package/gcc/gcc.mk b/package/gcc/gcc.mk
-index ec6f3b550a..6d4f6e0b20 100644
+index 41a2dfb1cc..ecba801ed6 100644
 --- a/package/gcc/gcc.mk
 +++ b/package/gcc/gcc.mk
-@@ -69,7 +69,6 @@ HOST_GCC_COMMON_DEPENDENCIES = \
+@@ -71,7 +71,6 @@ HOST_GCC_COMMON_DEPENDENCIES = \
  
  HOST_GCC_COMMON_CONF_OPTS = \
  	--target=$(GNU_TARGET_NAME) \
@@ -201,7 +208,7 @@ index ec6f3b550a..6d4f6e0b20 100644
  	--enable-__cxa_atexit \
  	--with-gnu-ld \
  	--disable-libssp \
-@@ -77,6 +76,7 @@ HOST_GCC_COMMON_CONF_OPTS = \
+@@ -79,6 +78,7 @@ HOST_GCC_COMMON_CONF_OPTS = \
  	--disable-decimal-float \
  	--enable-plugins \
  	--enable-lto \
@@ -209,6 +216,27 @@ index ec6f3b550a..6d4f6e0b20 100644
  	--with-gmp=$(HOST_DIR) \
  	--with-mpc=$(HOST_DIR) \
  	--with-mpfr=$(HOST_DIR) \
+diff --git a/package/pkg-generic.mk b/package/pkg-generic.mk
+index c7419b00fb..52784972e3 100644
+--- a/package/pkg-generic.mk
++++ b/package/pkg-generic.mk
+@@ -278,7 +278,7 @@ $(BUILD_DIR)/%/.stamp_configured:
+ # Build
+ $(BUILD_DIR)/%/.stamp_built:
+ 	@$(call step_start,build)
+-	@$(call MESSAGE,"Building")
++	@$(call MESSAGE,"Building $(PKG)")
+ 	$(foreach hook,$($(PKG)_PRE_BUILD_HOOKS),$(call $(hook))$(sep))
+ 	+$($(PKG)_BUILD_CMDS)
+ 	$(foreach hook,$($(PKG)_POST_BUILD_HOOKS),$(call $(hook))$(sep))
+@@ -318,6 +318,7 @@ $(BUILD_DIR)/%/.stamp_host_installed:
+ $(BUILD_DIR)/%/.stamp_staging_installed:
+ 	@$(call step_start,install-staging)
+ 	@$(call MESSAGE,"Installing to staging directory")
++	@$(call MESSAGE,"Foobar: $(PKG)")
+ 	$(foreach hook,$($(PKG)_PRE_INSTALL_STAGING_HOOKS),$(call $(hook))$(sep))
+ 	+$($(PKG)_INSTALL_STAGING_CMDS)
+ 	$(foreach hook,$($(PKG)_POST_INSTALL_STAGING_HOOKS),$(call $(hook))$(sep))
 -- 
-2.37.2
+2.40.1
 

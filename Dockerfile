@@ -83,8 +83,8 @@ RUN \
   git config --global user.email "builder@localhost"
 
 ARG UPSTREAM_SOURCE_FALLBACK
-ENV BRVER="2022.11.1"
-ENV KVER="5.10.162"
+ENV BRVER="2024.02.7"
+ENV KVER="5.10.226"
 
 WORKDIR /home/builder
 COPY ./hashes/buildroot ./hashes
@@ -134,7 +134,7 @@ FROM base as sdk
 USER root
 
 ARG UPSTREAM_SOURCE_FALLBACK
-ENV KVER="5.10.162"
+ENV KVER="5.10.226"
 
 WORKDIR /
 
@@ -158,7 +158,7 @@ COPY --chown=0:0 --from=toolchain-gnu-aarch64 \
 
 COPY --chown=0:0 --from=toolchain-musl-x86_64 \
   /home/builder/buildroot/output/x86_64-musl/toolchain/ /
-COPY --chown=0:0 --from=toolchain-musl-x86_64 \
+  COPY --chown=0:0 --from=toolchain-musl-x86_64 \
   /home/builder/buildroot/output/x86_64-musl/build/linux-headers-${KVER}/usr/include/ \
   /x86_64-bottlerocket-linux-musl/sys-root/usr/include/
 COPY --chown=0:0 --from=toolchain-musl-x86_64 \
@@ -167,7 +167,7 @@ COPY --chown=0:0 --from=toolchain-musl-x86_64 \
 
 COPY --chown=0:0 --from=toolchain-musl-aarch64 \
   /home/builder/buildroot/output/aarch64-musl/toolchain/ /
-COPY --chown=0:0 --from=toolchain-musl-aarch64 \
+  COPY --chown=0:0 --from=toolchain-musl-aarch64 \
   /home/builder/buildroot/output/aarch64-musl/build/linux-headers-${KVER}/usr/include/ \
   /aarch64-bottlerocket-linux-musl/sys-root/usr/include/
 COPY --chown=0:0 --from=toolchain-musl-aarch64 \
@@ -184,8 +184,8 @@ WORKDIR /home/builder
 COPY ./hashes/glibc ./hashes
 COPY ./helpers/glibc/* ./
 
-ENV GLIBCVER="2.37"
-ENV KVER="5.10.162"
+ENV GLIBCVER="2.38"
+ENV KVER="5.10.226"
 RUN \
   sdk-fetch hashes && \
   tar xf glibc-${GLIBCVER}.tar.xz && \
@@ -486,7 +486,7 @@ FROM sdk as sdk-bootconfig
 
 USER root
 
-ENV KVER="5.10.162"
+ENV KVER="5.10.226"
 
 RUN \
   mkdir -p /usr/libexec/tools /usr/share/licenses/bootconfig && \
