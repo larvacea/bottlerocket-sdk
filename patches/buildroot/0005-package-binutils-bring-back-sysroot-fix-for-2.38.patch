@@ -1,19 +1,19 @@
-From a6df7ffb2d109177a97bf6e9da08028c17f2bcc7 Mon Sep 17 00:00:00 2001
+From a6ea508d27cb0c9bcfa873b0188bece2a029995c Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Fri, 15 Mar 2019 18:32:49 +0000
-Subject: [PATCH] package/binutils: bring back sysroot fix for 2.38
+Subject: [PATCH 5/6] package/binutils: bring back sysroot fix for 2.38
 
 Signed-off-by: Ben Cressey <bcressey@amazon.com>
 ---
  .../9001-add-sysroot-fix-from-bug-3049.patch  | 53 +++++++++++++++++++
  1 file changed, 53 insertions(+)
- create mode 100644 package/binutils/2.38/9001-add-sysroot-fix-from-bug-3049.patch
+ create mode 100644 package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch
 
-diff --git a/package/binutils/2.38/9001-add-sysroot-fix-from-bug-3049.patch b/package/binutils/2.38/9001-add-sysroot-fix-from-bug-3049.patch
+diff --git a/package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch b/package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch
 new file mode 100644
 index 0000000000..7674fa3ad9
 --- /dev/null
-+++ b/package/binutils/2.38/9001-add-sysroot-fix-from-bug-3049.patch
++++ b/package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch
 @@ -0,0 +1,53 @@
 +From dc372679aa22f0a5341891924ccfce1e64537fd6 Mon Sep 17 00:00:00 2001
 +From: Romain Naour <romain.naour@gmail.com>
@@ -69,5 +69,5 @@ index 0000000000..7674fa3ad9
 +2.36.1
 +
 -- 
-2.37.2
+2.40.1
 
