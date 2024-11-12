@@ -215,7 +215,7 @@ WORKDIR /home/builder
 COPY ./hashes/musl ./hashes
 COPY ./helpers/musl/* ./
 
-ENV MUSLVER="1.2.3"
+ENV MUSLVER="1.2.4"
 RUN \
   sdk-fetch hashes && \
   tar xf musl-${MUSLVER}.tar.gz && \
