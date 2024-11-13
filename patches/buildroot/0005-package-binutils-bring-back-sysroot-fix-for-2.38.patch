@@ -1,7 +1,7 @@
-From a6df7ffb2d109177a97bf6e9da08028c17f2bcc7 Mon Sep 17 00:00:00 2001
+From bf73ccb79f54bdde8f7cc50e36557dccdd16c90c Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Fri, 15 Mar 2019 18:32:49 +0000
-Subject: [PATCH] package/binutils: bring back sysroot fix for 2.38
+Subject: [PATCH 5/6] package/binutils: bring back sysroot fix for 2.38
 
 Signed-off-by: Ben Cressey <bcressey@amazon.com>
 ---
@@ -69,5 +69,5 @@ index 0000000000..7674fa3ad9
 +2.36.1
 +
 -- 
-2.37.2
+2.40.1
 

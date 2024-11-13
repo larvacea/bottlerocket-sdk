@@ -1,7 +1,7 @@
-From c137f14fade2ae3c23ab389b2e3e99f8bb5a55ab Mon Sep 17 00:00:00 2001
-From: Ben Cressey <bcressey@amazon.com>
-Date: Sun, 6 Aug 2017 23:35:06 +0000
-Subject: [PATCH] add TOOLS_DIR and SYSROOT_DIR to control output
+From 3c42213990724e2bec93b6b18cbf323b33c8b0bf Mon Sep 17 00:00:00 2001
+From: Martin Harriman <larvacea@mac.com>
+Date: Wed, 13 Nov 2024 18:51:16 +0000
+Subject: [PATCH 2/6] add TOOLS_DIR and SYSROOT_DIR to control output
 
 The sysroot directory is essential to our purpose of building a
 relocatable toolchain, as GCC will look for it relative to the
@@ -24,10 +24,10 @@ Signed-off-by: Ben Cressey <bcressey@amazon.com>
  2 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 89f3648bb7..84591e22de 100644
+index 6ca6a15324..5397c2ce71 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -218,6 +218,7 @@ PER_PACKAGE_DIR := $(BASE_DIR)/per-package
+@@ -216,6 +216,7 @@ PER_PACKAGE_DIR := $(BASE_DIR)/per-package
  # .config. HOST_DIR will be overwritten later when .config is included.
  HOST_DIR := $(BASE_DIR)/host
  GRAPHS_DIR := $(BASE_DIR)/graphs
@@ -35,39 +35,39 @@ index 89f3648bb7..84591e22de 100644
  
  LEGAL_INFO_DIR = $(BASE_DIR)/legal-info
  REDIST_SOURCES_DIR_TARGET = $(LEGAL_INFO_DIR)/sources
-@@ -487,7 +488,9 @@ export BR2_CONFIG
+@@ -486,7 +487,9 @@ export BR2_CONFIG
  export BR2_REPRODUCIBLE
  export TARGET_DIR
  export STAGING_DIR
 +export SYSROOT_DIR
  export HOST_DIR
-+export TOOLS_DIR
++export TOOLS_DIR 
  export BINARIES_DIR
  export BASE_DIR
  
-@@ -1036,7 +1039,7 @@ savedefconfig: $(BUILD_DIR)/buildroot-config/conf outputmakefile
+@@ -1033,7 +1036,7 @@ savedefconfig: $(BUILD_DIR)/buildroot-config/conf outputmakefile
  
  # staging and target directories do NOT list these as
  # dependencies anywhere else
--$(BUILD_DIR) $(BASE_TARGET_DIR) $(HOST_DIR) $(BINARIES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST) $(PER_PACKAGE_DIR):
-+$(BUILD_DIR) $(BASE_TARGET_DIR) $(HOST_DIR) $(BINARIES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST) $(PER_PACKAGE_DIR) $(TOOLS_DIR):
+-$(BASE_DIR) $(BUILD_DIR) $(BASE_TARGET_DIR) $(HOST_DIR) $(BINARIES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST) $(PER_PACKAGE_DIR):
++$(BASE_DIR) $(BUILD_DIR) $(BASE_TARGET_DIR) $(HOST_DIR) $(BINARIES_DIR) $(LEGAL_INFO_DIR) $(REDIST_SOURCES_DIR_TARGET) $(REDIST_SOURCES_DIR_HOST) $(PER_PACKAGE_DIR) $(TOOLS_DIR):
  	@mkdir -p $@
  
  # outputmakefile generates a Makefile in the output directory, if using a
-@@ -1099,7 +1102,7 @@ show-vars:
+@@ -1096,7 +1099,7 @@ show-vars:
  clean:
  	rm -rf $(BASE_TARGET_DIR) $(BINARIES_DIR) $(HOST_DIR) $(HOST_DIR_SYMLINK) \
  		$(BUILD_DIR) $(BASE_DIR)/staging \
--		$(LEGAL_INFO_DIR) $(GRAPHS_DIR) $(PER_PACKAGE_DIR) $(CPE_UPDATES_DIR) \
-+		$(LEGAL_INFO_DIR) $(GRAPHS_DIR) $(PER_PACKAGE_DIR) $(CPE_UPDATES_DIR) $(TOOLS_DIR) \
- 		$(O)/pkg-stats.*
+-		$(LEGAL_INFO_DIR) $(GRAPHS_DIR) $(PER_PACKAGE_DIR) $(O)/pkg-stats.*
++		$(LEGAL_INFO_DIR) $(GRAPHS_DIR) $(PER_PACKAGE_DIR) $(TOOLS_DIR) $(O)/pkg-stats.*
  
  .PHONY: distclean
+ distclean: clean
 diff --git a/package/Makefile.in b/package/Makefile.in
-index 3e9036b96f..75dd28daa4 100644
+index f5ab45b4d2..0844ec181f 100644
 --- a/package/Makefile.in
 +++ b/package/Makefile.in
-@@ -108,8 +108,9 @@ ifeq ($(BR2_xtensa),y)
+@@ -110,8 +110,9 @@ ifeq ($(BR2_xtensa),y)
  TARGET_ABI += -mlongcalls -mauto-litpools
  endif
  
@@ -79,5 +79,5 @@ index 3e9036b96f..75dd28daa4 100644
  ifeq ($(BR2_OPTIMIZE_0),y)
  TARGET_OPTIMIZATION = -O0
 -- 
-2.37.2
+2.40.1
 
