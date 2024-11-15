@@ -1,7 +1,7 @@
-From 1fb43df9f191688a043758e6af44b9c188a40f12 Mon Sep 17 00:00:00 2001
+From c6c6da7ab52b31e4f135924a3a5c444a8b616457 Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:40:50 +0000
-Subject: [PATCH] build binutils with TOOLS_DIR and SYSROOT_DIR
+Subject: [PATCH 3/6] build binutils with TOOLS_DIR and SYSROOT_DIR
 
 The binutils build only needs one stage, so we can write the binaries
 directly to the new output path.
@@ -72,5 +72,5 @@ index 1ef7ee57d2..5fbaef88bb 100644
  $(eval $(autotools-package))
  $(eval $(host-autotools-package))
 -- 
-2.37.2
+2.40.1
 

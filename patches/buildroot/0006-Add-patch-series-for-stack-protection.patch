@@ -1,7 +1,7 @@
-From 0094638ec77ae1de515bd2ea7e00d66ae6fd29c8 Mon Sep 17 00:00:00 2001
+From e53aa51004d26aa592e7659920b9457ebb93c646 Mon Sep 17 00:00:00 2001
 From: Matthew Yeazel <yeazelm@amazon.com>
 Date: Tue, 22 Aug 2023 18:01:09 +0000
-Subject: [PATCH] Add patch series for stack protection
+Subject: [PATCH 6/6] Add patch series for stack protection
 
 This patchset adds additional protections against stack corruption for
 instances on aarch64 where -fstack-protector may not work as expected.
@@ -2989,5 +2989,5 @@ index 0000000000..33866e8afd
 +2.25.1
 +
 -- 
-2.41.0
+2.40.1
 
