@@ -1,7 +1,7 @@
-From 9e6d1c176a007d6751e3acd02f96becee48ef361 Mon Sep 17 00:00:00 2001
+From e04061f59c69bdf9c11769f9235411ac976abc0d Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:15:02 +0000
-Subject: [PATCH] disable shared for host builds of gmp, isl, mpc, mpfr
+Subject: [PATCH 1/6] disable shared for host builds of gmp, isl, mpc, mpfr
 
 Building these GCC dependencies as static libraries avoids the need to
 provide the shared library paths at runtime, using either rpath entries
@@ -17,10 +17,10 @@ Signed-off-by: Ben Cressey <bcressey@amazon.com>
  5 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/package/Makefile.in b/package/Makefile.in
-index 43d214bcbe..3e9036b96f 100644
+index d70aded82b..4df1b1eb36 100644
 --- a/package/Makefile.in
 +++ b/package/Makefile.in
-@@ -243,7 +243,7 @@ HOST_CPPFLAGS  = -I$(HOST_DIR)/include
+@@ -245,7 +245,7 @@ HOST_CPPFLAGS  = -I$(HOST_DIR)/include
  HOST_CFLAGS   ?= -O2
  HOST_CFLAGS   += $(HOST_CPPFLAGS)
  HOST_CXXFLAGS += $(HOST_CFLAGS)
@@ -30,7 +30,7 @@ index 43d214bcbe..3e9036b96f 100644
  # host-intltool should be executed with the system perl, so we save
  # the path to the system perl, before a host-perl built by Buildroot
 diff --git a/package/gmp/gmp.mk b/package/gmp/gmp.mk
-index 9b402767fd..fe7cf05d8e 100644
+index a077c89d92..65a847a88d 100644
 --- a/package/gmp/gmp.mk
 +++ b/package/gmp/gmp.mk
 @@ -14,6 +14,10 @@ GMP_CPE_ID_VENDOR = gmplib
@@ -72,7 +72,7 @@ index 364e4c3c85..2a93394a39 100644
  $(eval $(autotools-package))
  $(eval $(host-autotools-package))
 diff --git a/package/mpfr/mpfr.mk b/package/mpfr/mpfr.mk
-index cd558dae0e..74080ec884 100644
+index 8d12c7502b..b8be42215d 100644
 --- a/package/mpfr/mpfr.mk
 +++ b/package/mpfr/mpfr.mk
 @@ -15,5 +15,9 @@ MPFR_DEPENDENCIES = gmp
@@ -86,5 +86,5 @@ index cd558dae0e..74080ec884 100644
  $(eval $(autotools-package))
  $(eval $(host-autotools-package))
 -- 
-2.37.2
+2.40.1
 
