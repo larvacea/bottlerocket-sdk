@@ -1,4 +1,4 @@
-From bf9694534b9c792f1d33e90f75289132bcdcbdde Mon Sep 17 00:00:00 2001
+From b3b5c06bb6e38c4689dfc3527dc8dfde819977c4 Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:58:27 +0000
 Subject: [PATCH 4/6] build gcc with TOOLS_DIR and SYSROOT_DIR
