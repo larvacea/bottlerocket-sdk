@@ -1,7 +1,7 @@
 # https://buildroot.org/downloads/buildroot-2023.05.3.tar.xz
 SHA512 (buildroot-2023.05.3.tar.xz) = 0e645931f3854a833dbbaf7b90374b07059afef5e35d8d6cef14b6bb37cdee1c0d6925639d1ddd39f05d89b0eece07cba1393d144274f0ee1c9037f9a11183bc
-# https://mirrors.kernel.org/gnu/binutils/binutils-2.38.tar.xz
-SHA512 (binutils-2.38.tar.xz) = 8bf0b0d193c9c010e0518ee2b2e5a830898af206510992483b427477ed178396cd210235e85fd7bd99a96fc6d5eedbeccbd48317a10f752b7336ada8b2bb826d
+# https://mirrors.kernel.org/gnu/binutils/binutils-2.39.tar.xz
+SHA512 (binutils-2.39.tar.xz) = 68e038f339a8c21faa19a57bbc447a51c817f47c2e06d740847c6e9cc3396c025d35d5369fa8c3f8b70414757c89f0e577939ddc0d70f283182504920f53b0a3
 # https://mirrors.kernel.org/gnu/bison/bison-3.8.2.tar.xz
 SHA512 (bison-3.8.2.tar.xz) = d4d23af6671406e97257892f90651b67f2ab95219831372be032190b7156c10a3435d457857e677445df8b2327aacccc15344acbbc3808a6f332a93cce23b444
 # https://mirrors.kernel.org/gnu/gawk/gawk-5.2.0.tar.xz
