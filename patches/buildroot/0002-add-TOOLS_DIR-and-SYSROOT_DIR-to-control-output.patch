@@ -1,4 +1,4 @@
-From bed5debec609844a3737fab4400cb4b4d995d57c Mon Sep 17 00:00:00 2001
+From d36d14809314a8cb2f6affa368271c09d2cc7590 Mon Sep 17 00:00:00 2001
 From: Martin Harriman <larvacea@mac.com>
 Date: Fri, 15 Nov 2024 20:48:45 +0000
 Subject: [PATCH 2/6] add TOOLS_DIR and SYSROOT_DIR to control output
@@ -24,7 +24,7 @@ Signed-off-by: Ben Cressey <bcressey@amazon.com>
  2 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index eedf4ea296..f1a081349e 100644
+index eedf4ea2..f1a08134 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -216,6 +216,7 @@ PER_PACKAGE_DIR := $(BASE_DIR)/per-package
@@ -64,7 +64,7 @@ index eedf4ea296..f1a081349e 100644
  
  .PHONY: distclean
 diff --git a/package/Makefile.in b/package/Makefile.in
-index 4df1b1eb36..ca6013b6fa 100644
+index 4df1b1eb..ca6013b6 100644
 --- a/package/Makefile.in
 +++ b/package/Makefile.in
 @@ -108,8 +108,9 @@ ifeq ($(BR2_xtensa),y)

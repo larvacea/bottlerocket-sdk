@@ -1,4 +1,4 @@
-From e53aa51004d26aa592e7659920b9457ebb93c646 Mon Sep 17 00:00:00 2001
+From 8e10a68e12541d8503e5dadab50389f8c2c015f7 Mon Sep 17 00:00:00 2001
 From: Matthew Yeazel <yeazelm@amazon.com>
 Date: Tue, 22 Aug 2023 18:01:09 +0000
 Subject: [PATCH 6/6] Add patch series for stack protection
@@ -48,7 +48,7 @@ instances on aarch64 where -fstack-protector may not work as expected.
 
 diff --git a/package/gcc/11.3.0/9001-aarch64-Use-local-frame-vars-in-shrink-wrapping-code.patch b/package/gcc/11.3.0/9001-aarch64-Use-local-frame-vars-in-shrink-wrapping-code.patch
 new file mode 100644
-index 0000000000..0e5417ae33
+index 00000000..0e5417ae
 --- /dev/null
 +++ b/package/gcc/11.3.0/9001-aarch64-Use-local-frame-vars-in-shrink-wrapping-code.patch
 @@ -0,0 +1,349 @@
@@ -403,7 +403,7 @@ index 0000000000..0e5417ae33
 +
 diff --git a/package/gcc/11.3.0/9002-aarch64-Avoid-a-use-of-callee_offset.patch b/package/gcc/11.3.0/9002-aarch64-Avoid-a-use-of-callee_offset.patch
 new file mode 100644
-index 0000000000..e296cbc26d
+index 00000000..e296cbc2
 --- /dev/null
 +++ b/package/gcc/11.3.0/9002-aarch64-Avoid-a-use-of-callee_offset.patch
 @@ -0,0 +1,73 @@
@@ -482,7 +482,7 @@ index 0000000000..e296cbc26d
 +
 diff --git a/package/gcc/11.3.0/9003-aarch64-Explicitly-handle-frames-with-no-saved-registers.patch b/package/gcc/11.3.0/9003-aarch64-Explicitly-handle-frames-with-no-saved-registers.patch
 new file mode 100644
-index 0000000000..27d9ce8e2b
+index 00000000..27d9ce8e
 --- /dev/null
 +++ b/package/gcc/11.3.0/9003-aarch64-Explicitly-handle-frames-with-no-saved-registers.patch
 @@ -0,0 +1,49 @@
@@ -537,7 +537,7 @@ index 0000000000..27d9ce8e2b
 +
 diff --git a/package/gcc/11.3.0/9004-aarch64-Add-bytes_below_saved_regs-to-frame-info.patch b/package/gcc/11.3.0/9004-aarch64-Add-bytes_below_saved_regs-to-frame-info.patch
 new file mode 100644
-index 0000000000..f8d23094db
+index 00000000..f8d23094
 --- /dev/null
 +++ b/package/gcc/11.3.0/9004-aarch64-Add-bytes_below_saved_regs-to-frame-info.patch
 @@ -0,0 +1,233 @@
@@ -776,7 +776,7 @@ index 0000000000..f8d23094db
 +
 diff --git a/package/gcc/11.3.0/9005-aarch64-Add-bytes_below_hard_fp-to-frame-info.patch b/package/gcc/11.3.0/9005-aarch64-Add-bytes_below_hard_fp-to-frame-info.patch
 new file mode 100644
-index 0000000000..7194951cd3
+index 00000000..7194951c
 --- /dev/null
 +++ b/package/gcc/11.3.0/9005-aarch64-Add-bytes_below_hard_fp-to-frame-info.patch
 @@ -0,0 +1,84 @@
@@ -866,7 +866,7 @@ index 0000000000..7194951cd3
 +
 diff --git a/package/gcc/11.3.0/9006-aarch64-Tweak-aarch64_save-restore_callee_saves.patch b/package/gcc/11.3.0/9006-aarch64-Tweak-aarch64_save-restore_callee_saves.patch
 new file mode 100644
-index 0000000000..0c530932d0
+index 00000000..0c530932
 --- /dev/null
 +++ b/package/gcc/11.3.0/9006-aarch64-Tweak-aarch64_save-restore_callee_saves.patch
 @@ -0,0 +1,221 @@
@@ -1093,7 +1093,7 @@ index 0000000000..0c530932d0
 +
 diff --git a/package/gcc/11.3.0/9007-aarch64-Only-calculate-chain_offset-if-there-is-a-chain.patch b/package/gcc/11.3.0/9007-aarch64-Only-calculate-chain_offset-if-there-is-a-chain.patch
 new file mode 100644
-index 0000000000..0f87966416
+index 00000000..0f879664
 --- /dev/null
 +++ b/package/gcc/11.3.0/9007-aarch64-Only-calculate-chain_offset-if-there-is-a-chain.patch
 @@ -0,0 +1,45 @@
@@ -1144,7 +1144,7 @@ index 0000000000..0f87966416
 +
 diff --git a/package/gcc/11.3.0/9008-aarch64-Rename-locals_offset-to-bytes_above_locals.patch b/package/gcc/11.3.0/9008-aarch64-Rename-locals_offset-to-bytes_above_locals.patch
 new file mode 100644
-index 0000000000..2eca99fff7
+index 00000000..2eca99ff
 --- /dev/null
 +++ b/package/gcc/11.3.0/9008-aarch64-Rename-locals_offset-to-bytes_above_locals.patch
 @@ -0,0 +1,89 @@
@@ -1239,7 +1239,7 @@ index 0000000000..2eca99fff7
 +
 diff --git a/package/gcc/11.3.0/9009-aarch64-Rename-hard_fp_offset-to-bytes_above_hard_fp.patch b/package/gcc/11.3.0/9009-aarch64-Rename-hard_fp_offset-to-bytes_above_hard_fp.patch
 new file mode 100644
-index 0000000000..bc33c4e66d
+index 00000000..bc33c4e6
 --- /dev/null
 +++ b/package/gcc/11.3.0/9009-aarch64-Rename-hard_fp_offset-to-bytes_above_hard_fp.patch
 @@ -0,0 +1,146 @@
@@ -1391,7 +1391,7 @@ index 0000000000..bc33c4e66d
 +
 diff --git a/package/gcc/11.3.0/9010-aarch64-Tweak-frame_size-comment.patch b/package/gcc/11.3.0/9010-aarch64-Tweak-frame_size-comment.patch
 new file mode 100644
-index 0000000000..d4df4a3e28
+index 00000000..d4df4a3e
 --- /dev/null
 +++ b/package/gcc/11.3.0/9010-aarch64-Tweak-frame_size-comment.patch
 @@ -0,0 +1,33 @@
@@ -1430,7 +1430,7 @@ index 0000000000..d4df4a3e28
 +
 diff --git a/package/gcc/11.3.0/9011-aarch64-Measure-reg_offset-from-the-bottom-of-the-frame.patch b/package/gcc/11.3.0/9011-aarch64-Measure-reg_offset-from-the-bottom-of-the-frame.patch
 new file mode 100644
-index 0000000000..23099e4ef2
+index 00000000..23099e4e
 --- /dev/null
 +++ b/package/gcc/11.3.0/9011-aarch64-Measure-reg_offset-from-the-bottom-of-the-frame.patch
 @@ -0,0 +1,196 @@
@@ -1632,7 +1632,7 @@ index 0000000000..23099e4ef2
 +
 diff --git a/package/gcc/11.3.0/9012-aarch64-Simplify-top-of-frame-allocation.patch b/package/gcc/11.3.0/9012-aarch64-Simplify-top-of-frame-allocation.patch
 new file mode 100644
-index 0000000000..6f7b6e2c16
+index 00000000..6f7b6e2c
 --- /dev/null
 +++ b/package/gcc/11.3.0/9012-aarch64-Simplify-top-of-frame-allocation.patch
 @@ -0,0 +1,55 @@
@@ -1693,7 +1693,7 @@ index 0000000000..6f7b6e2c16
 +
 diff --git a/package/gcc/11.3.0/9013-aarch64-Minor-initial-adjustment-tweak.patch b/package/gcc/11.3.0/9013-aarch64-Minor-initial-adjustment-tweak.patch
 new file mode 100644
-index 0000000000..2ddbc4071f
+index 00000000..2ddbc407
 --- /dev/null
 +++ b/package/gcc/11.3.0/9013-aarch64-Minor-initial-adjustment-tweak.patch
 @@ -0,0 +1,38 @@
@@ -1737,7 +1737,7 @@ index 0000000000..2ddbc4071f
 +
 diff --git a/package/gcc/11.3.0/9014-aarch64-Tweak-stack-clash-boundary-condition.patch b/package/gcc/11.3.0/9014-aarch64-Tweak-stack-clash-boundary-condition.patch
 new file mode 100644
-index 0000000000..d47f9283d6
+index 00000000..d47f9283
 --- /dev/null
 +++ b/package/gcc/11.3.0/9014-aarch64-Tweak-stack-clash-boundary-condition.patch
 @@ -0,0 +1,125 @@
@@ -1868,7 +1868,7 @@ index 0000000000..d47f9283d6
 +
 diff --git a/package/gcc/11.3.0/9015-aarch64-Put-LR-save-probe-in-first-16-bytes.patch b/package/gcc/11.3.0/9015-aarch64-Put-LR-save-probe-in-first-16-bytes.patch
 new file mode 100644
-index 0000000000..6626a3473f
+index 00000000..6626a347
 --- /dev/null
 +++ b/package/gcc/11.3.0/9015-aarch64-Put-LR-save-probe-in-first-16-bytes.patch
 @@ -0,0 +1,263 @@
@@ -2137,7 +2137,7 @@ index 0000000000..6626a3473f
 +
 diff --git a/package/gcc/11.3.0/9016-aarch64-Simplify-probe-of-final-frame-allocation.patch b/package/gcc/11.3.0/9016-aarch64-Simplify-probe-of-final-frame-allocation.patch
 new file mode 100644
-index 0000000000..3daa4502b0
+index 00000000..3daa4502
 --- /dev/null
 +++ b/package/gcc/11.3.0/9016-aarch64-Simplify-probe-of-final-frame-allocation.patch
 @@ -0,0 +1,99 @@
@@ -2242,7 +2242,7 @@ index 0000000000..3daa4502b0
 +
 diff --git a/package/gcc/11.3.0/9017-aarch64-Explicitly-record-probe-registers-in-frame-info.patch b/package/gcc/11.3.0/9017-aarch64-Explicitly-record-probe-registers-in-frame-info.patch
 new file mode 100644
-index 0000000000..1e25b86efe
+index 00000000..1e25b86e
 --- /dev/null
 +++ b/package/gcc/11.3.0/9017-aarch64-Explicitly-record-probe-registers-in-frame-info.patch
 @@ -0,0 +1,275 @@
@@ -2523,7 +2523,7 @@ index 0000000000..1e25b86efe
 +
 diff --git a/package/gcc/11.3.0/9018-aarch64-Remove-below_hard_fp_saved_regs_size.patch b/package/gcc/11.3.0/9018-aarch64-Remove-below_hard_fp_saved_regs_size.patch
 new file mode 100644
-index 0000000000..d5ab90340d
+index 00000000..d5ab9034
 --- /dev/null
 +++ b/package/gcc/11.3.0/9018-aarch64-Remove-below_hard_fp_saved_regs_size.patch
 @@ -0,0 +1,157 @@
@@ -2686,7 +2686,7 @@ index 0000000000..d5ab90340d
 +
 diff --git a/package/gcc/11.3.0/9019-aarch64-Make-stack-smash-canary-protect-saved-registers.patch b/package/gcc/11.3.0/9019-aarch64-Make-stack-smash-canary-protect-saved-registers.patch
 new file mode 100644
-index 0000000000..33866e8afd
+index 00000000..33866e8a
 --- /dev/null
 +++ b/package/gcc/11.3.0/9019-aarch64-Make-stack-smash-canary-protect-saved-registers.patch
 @@ -0,0 +1,298 @@
