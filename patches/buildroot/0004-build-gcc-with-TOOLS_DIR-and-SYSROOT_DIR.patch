@@ -1,4 +1,4 @@
-From bf9694534b9c792f1d33e90f75289132bcdcbdde Mon Sep 17 00:00:00 2001
+From 45685b5ae9226eaad56a8f412cbc9d02584c2904 Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:58:27 +0000
 Subject: [PATCH 4/6] build gcc with TOOLS_DIR and SYSROOT_DIR
@@ -28,7 +28,7 @@ Signed-off-by: Ben Cressey <bcressey@amazon.com>
  3 files changed, 46 insertions(+), 15 deletions(-)
 
 diff --git a/package/gcc/gcc-final/gcc-final.mk b/package/gcc/gcc-final/gcc-final.mk
-index aa883beb7b..7f0d1d059d 100644
+index aa883beb..7f0d1d05 100644
 --- a/package/gcc/gcc-final/gcc-final.mk
 +++ b/package/gcc/gcc-final/gcc-final.mk
 @@ -45,9 +45,16 @@ define HOST_GCC_FINAL_CONFIGURE_CMDS
@@ -166,7 +166,7 @@ index aa883beb7b..7f0d1d059d 100644
 +
  $(eval $(host-autotools-package))
 diff --git a/package/gcc/gcc-initial/gcc-initial.mk b/package/gcc/gcc-initial/gcc-initial.mk
-index a8ac20c5d8..b48c00be42 100644
+index a8ac20c5..b48c00be 100644
 --- a/package/gcc/gcc-initial/gcc-initial.mk
 +++ b/package/gcc/gcc-initial/gcc-initial.mk
 @@ -34,6 +34,7 @@ HOST_GCC_INITIAL_CONF_OPTS = \
@@ -190,7 +190,7 @@ index a8ac20c5d8..b48c00be42 100644
  
  $(eval $(host-autotools-package))
 diff --git a/package/gcc/gcc.mk b/package/gcc/gcc.mk
-index 3050229176..752174b65d 100644
+index 30502291..752174b6 100644
 --- a/package/gcc/gcc.mk
 +++ b/package/gcc/gcc.mk
 @@ -69,7 +69,6 @@ HOST_GCC_COMMON_DEPENDENCIES = \

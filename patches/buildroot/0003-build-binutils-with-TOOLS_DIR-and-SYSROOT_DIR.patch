@@ -1,4 +1,4 @@
-From c6c6da7ab52b31e4f135924a3a5c444a8b616457 Mon Sep 17 00:00:00 2001
+From 8b79aad1d1aacd128ca78aac93d84b3d2be9b069 Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:40:50 +0000
 Subject: [PATCH 3/6] build binutils with TOOLS_DIR and SYSROOT_DIR
@@ -16,7 +16,7 @@ Signed-off-by: Ben Cressey <bcressey@amazon.com>
  1 file changed, 20 insertions(+), 3 deletions(-)
 
 diff --git a/package/binutils/binutils.mk b/package/binutils/binutils.mk
-index 1ef7ee57d2..5fbaef88bb 100644
+index 1ef7ee57..5fbaef88 100644
 --- a/package/binutils/binutils.mk
 +++ b/package/binutils/binutils.mk
 @@ -65,9 +65,10 @@ endif

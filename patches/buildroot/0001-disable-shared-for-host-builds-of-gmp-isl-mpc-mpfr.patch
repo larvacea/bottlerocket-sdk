@@ -1,4 +1,4 @@
-From e04061f59c69bdf9c11769f9235411ac976abc0d Mon Sep 17 00:00:00 2001
+From 5aae85c08a67c54d38f2fbe23155681d958543a3 Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:15:02 +0000
 Subject: [PATCH 1/6] disable shared for host builds of gmp, isl, mpc, mpfr
@@ -17,7 +17,7 @@ Signed-off-by: Ben Cressey <bcressey@amazon.com>
  5 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/package/Makefile.in b/package/Makefile.in
-index d70aded82b..4df1b1eb36 100644
+index d70aded8..4df1b1eb 100644
 --- a/package/Makefile.in
 +++ b/package/Makefile.in
 @@ -245,7 +245,7 @@ HOST_CPPFLAGS  = -I$(HOST_DIR)/include
@@ -30,7 +30,7 @@ index d70aded82b..4df1b1eb36 100644
  # host-intltool should be executed with the system perl, so we save
  # the path to the system perl, before a host-perl built by Buildroot
 diff --git a/package/gmp/gmp.mk b/package/gmp/gmp.mk
-index a077c89d92..65a847a88d 100644
+index a077c89d..65a847a8 100644
 --- a/package/gmp/gmp.mk
 +++ b/package/gmp/gmp.mk
 @@ -14,6 +14,10 @@ GMP_CPE_ID_VENDOR = gmplib
@@ -45,7 +45,7 @@ index a077c89d92..65a847a88d 100644
  GMP_IGNORE_CVES += CVE-2021-43618
  
 diff --git a/package/isl/isl.mk b/package/isl/isl.mk
-index ce9aaecebc..883bf3a830 100644
+index ce9aaece..883bf3a8 100644
 --- a/package/isl/isl.mk
 +++ b/package/isl/isl.mk
 @@ -11,4 +11,8 @@ ISL_LICENSE = MIT
@@ -58,7 +58,7 @@ index ce9aaecebc..883bf3a830 100644
 +
  $(eval $(host-autotools-package))
 diff --git a/package/mpc/mpc.mk b/package/mpc/mpc.mk
-index 364e4c3c85..2a93394a39 100644
+index 364e4c3c..2a93394a 100644
 --- a/package/mpc/mpc.mk
 +++ b/package/mpc/mpc.mk
 @@ -12,5 +12,9 @@ MPC_INSTALL_STAGING = YES
@@ -72,7 +72,7 @@ index 364e4c3c85..2a93394a39 100644
  $(eval $(autotools-package))
  $(eval $(host-autotools-package))
 diff --git a/package/mpfr/mpfr.mk b/package/mpfr/mpfr.mk
-index 8d12c7502b..b8be42215d 100644
+index 8d12c750..b8be4221 100644
 --- a/package/mpfr/mpfr.mk
 +++ b/package/mpfr/mpfr.mk
 @@ -15,5 +15,9 @@ MPFR_DEPENDENCIES = gmp
