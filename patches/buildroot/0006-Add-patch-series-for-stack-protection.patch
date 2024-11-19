@@ -1,4 +1,4 @@
-From da68c9fc29726965e86bc8f903c013982c0089ac Mon Sep 17 00:00:00 2001
+From 15a4429ec27d20e13266a22d9541f923a7a60e82 Mon Sep 17 00:00:00 2001
 From: Matthew Yeazel <yeazelm@amazon.com>
 Date: Tue, 22 Aug 2023 18:01:09 +0000
 Subject: [PATCH 6/6] Add patch series for stack protection
