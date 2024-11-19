@@ -1,4 +1,4 @@
-From 45685b5ae9226eaad56a8f412cbc9d02584c2904 Mon Sep 17 00:00:00 2001
+From 1a79ab2adfab87fe58a3b1af8be6b1633a1ea976 Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:58:27 +0000
 Subject: [PATCH 4/6] build gcc with TOOLS_DIR and SYSROOT_DIR
@@ -190,10 +190,10 @@ index a8ac20c5..b48c00be 100644
  
  $(eval $(host-autotools-package))
 diff --git a/package/gcc/gcc.mk b/package/gcc/gcc.mk
-index 30502291..752174b6 100644
+index 834da249..bfb7de9a 100644
 --- a/package/gcc/gcc.mk
 +++ b/package/gcc/gcc.mk
-@@ -69,7 +69,6 @@ HOST_GCC_COMMON_DEPENDENCIES = \
+@@ -68,7 +68,6 @@ HOST_GCC_COMMON_DEPENDENCIES = \
  
  HOST_GCC_COMMON_CONF_OPTS = \
  	--target=$(GNU_TARGET_NAME) \
@@ -201,7 +201,7 @@ index 30502291..752174b6 100644
  	--enable-__cxa_atexit \
  	--with-gnu-ld \
  	--disable-libssp \
-@@ -77,6 +76,7 @@ HOST_GCC_COMMON_CONF_OPTS = \
+@@ -76,6 +75,7 @@ HOST_GCC_COMMON_CONF_OPTS = \
  	--disable-decimal-float \
  	--enable-plugins \
  	--enable-lto \

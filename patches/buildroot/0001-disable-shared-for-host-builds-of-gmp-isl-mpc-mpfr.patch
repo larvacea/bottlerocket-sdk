@@ -1,4 +1,4 @@
-From 5aae85c08a67c54d38f2fbe23155681d958543a3 Mon Sep 17 00:00:00 2001
+From b90b648d30fe4b6e6554a04b9d3f7d93aebdf6c7 Mon Sep 17 00:00:00 2001
 From: Ben Cressey <bcressey@amazon.com>
 Date: Sun, 6 Aug 2017 23:15:02 +0000
 Subject: [PATCH 1/6] disable shared for host builds of gmp, isl, mpc, mpfr
@@ -17,10 +17,10 @@ Signed-off-by: Ben Cressey <bcressey@amazon.com>
  5 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/package/Makefile.in b/package/Makefile.in
-index d70aded8..4df1b1eb 100644
+index 7e6ae195..f5ab45b4 100644
 --- a/package/Makefile.in
 +++ b/package/Makefile.in
-@@ -245,7 +245,7 @@ HOST_CPPFLAGS  = -I$(HOST_DIR)/include
+@@ -247,7 +247,7 @@ HOST_CPPFLAGS  = -I$(HOST_DIR)/include
  HOST_CFLAGS   ?= -O2
  HOST_CFLAGS   += $(HOST_CPPFLAGS)
  HOST_CXXFLAGS += $(HOST_CFLAGS)

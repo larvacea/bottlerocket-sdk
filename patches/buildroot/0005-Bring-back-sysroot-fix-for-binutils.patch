@@ -1,0 +1,204 @@
+From 0e301ad74370a3ebb80e48197f2fadb5cf78f3e6 Mon Sep 17 00:00:00 2001
+From: Martin Harriman <larvacea@mac.com>
+Date: Mon, 18 Nov 2024 23:00:05 +0000
+Subject: [PATCH 5/6] Bring back sysroot fix for binutils
+
+Patch 2.39, 2.40, and 2.41
+---
+ .../9001-add-sysroot-fix-from-bug-3049.patch  | 53 +++++++++++++++++++
+ .../9001-add-sysroot-fix-from-bug-3049.patch  | 53 +++++++++++++++++++
+ .../9001-add-sysroot-fix-from-bug-3049.patch  | 53 +++++++++++++++++++
+ .../musl-compat-headers.hash                  |  2 +-
+ 4 files changed, 160 insertions(+), 1 deletion(-)
+ create mode 100644 package/binutils/2.39/9001-add-sysroot-fix-from-bug-3049.patch
+ create mode 100644 package/binutils/2.40/9001-add-sysroot-fix-from-bug-3049.patch
+ create mode 100644 package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch
+
+diff --git a/package/binutils/2.39/9001-add-sysroot-fix-from-bug-3049.patch b/package/binutils/2.39/9001-add-sysroot-fix-from-bug-3049.patch
+new file mode 100644
+index 00000000..7674fa3a
+--- /dev/null
++++ b/package/binutils/2.39/9001-add-sysroot-fix-from-bug-3049.patch
+@@ -0,0 +1,53 @@
++From dc372679aa22f0a5341891924ccfce1e64537fd6 Mon Sep 17 00:00:00 2001
++From: Romain Naour <romain.naour@gmail.com>
++Date: Fri, 25 Dec 2015 11:42:48 +0100
++Subject: [PATCH] add sysroot fix from bug #3049
++
++Always try to prepend the sysroot prefix to absolute filenames first.
++
++http://bugs.gentoo.org/275666
++http://sourceware.org/bugzilla/show_bug.cgi?id=10340
++
++Signed-off-by: Sven Rebhan <odinshorse@googlemail.com>
++[Romain: rebase on top of 2.26]
++Signed-off-by: Romain Naour <romain.naour@gmail.com>
++[bcressey: rebase on top of 2.38]
++Signed-off-by: Ben Cressey <bcressey@amazon.com>
++---
++ ld/ldfile.c | 10 ++++++++--
++ 1 file changed, 8 insertions(+), 2 deletions(-)
++
++diff --git a/ld/ldfile.c b/ld/ldfile.c
++index 731ae5f7aed..7fda926c03c 100644
++--- a/ld/ldfile.c
+++++ b/ld/ldfile.c
++@@ -340,18 +340,24 @@ ldfile_open_file_search (const char *arch,
++      directory first.  */
++   if (!entry->flags.maybe_archive)
++     {
++-      if (entry->flags.sysrooted && IS_ABSOLUTE_PATH (entry->filename))
+++     /* For absolute pathnames, try to always open the file in the
+++	 sysroot first. If this fails, try to open the file at the
+++	 given location.  */
+++     entry->flags.sysrooted = is_sysrooted_pathname (entry->filename);
+++     if (!entry->flags.sysrooted && IS_ABSOLUTE_PATH (entry->filename)
+++     && ld_sysroot)
++ 	{
++ 	  char *name = concat (ld_sysroot, entry->filename,
++ 			       (const char *) NULL);
++ 	  if (ldfile_try_open_bfd (name, entry))
++ 	    {
++ 	      entry->filename = name;
+++	      entry->flags.sysrooted = true;
++ 	      return true;
++ 	    }
++ 	  free (name);
++ 	}
++-      else if (ldfile_try_open_bfd (entry->filename, entry))
+++      if (ldfile_try_open_bfd (entry->filename, entry))
++ 	return true;
++ 
++       if (IS_ABSOLUTE_PATH (entry->filename))
++-- 
++2.36.1
++
+diff --git a/package/binutils/2.40/9001-add-sysroot-fix-from-bug-3049.patch b/package/binutils/2.40/9001-add-sysroot-fix-from-bug-3049.patch
+new file mode 100644
+index 00000000..7674fa3a
+--- /dev/null
++++ b/package/binutils/2.40/9001-add-sysroot-fix-from-bug-3049.patch
+@@ -0,0 +1,53 @@
++From dc372679aa22f0a5341891924ccfce1e64537fd6 Mon Sep 17 00:00:00 2001
++From: Romain Naour <romain.naour@gmail.com>
++Date: Fri, 25 Dec 2015 11:42:48 +0100
++Subject: [PATCH] add sysroot fix from bug #3049
++
++Always try to prepend the sysroot prefix to absolute filenames first.
++
++http://bugs.gentoo.org/275666
++http://sourceware.org/bugzilla/show_bug.cgi?id=10340
++
++Signed-off-by: Sven Rebhan <odinshorse@googlemail.com>
++[Romain: rebase on top of 2.26]
++Signed-off-by: Romain Naour <romain.naour@gmail.com>
++[bcressey: rebase on top of 2.38]
++Signed-off-by: Ben Cressey <bcressey@amazon.com>
++---
++ ld/ldfile.c | 10 ++++++++--
++ 1 file changed, 8 insertions(+), 2 deletions(-)
++
++diff --git a/ld/ldfile.c b/ld/ldfile.c
++index 731ae5f7aed..7fda926c03c 100644
++--- a/ld/ldfile.c
+++++ b/ld/ldfile.c
++@@ -340,18 +340,24 @@ ldfile_open_file_search (const char *arch,
++      directory first.  */
++   if (!entry->flags.maybe_archive)
++     {
++-      if (entry->flags.sysrooted && IS_ABSOLUTE_PATH (entry->filename))
+++     /* For absolute pathnames, try to always open the file in the
+++	 sysroot first. If this fails, try to open the file at the
+++	 given location.  */
+++     entry->flags.sysrooted = is_sysrooted_pathname (entry->filename);
+++     if (!entry->flags.sysrooted && IS_ABSOLUTE_PATH (entry->filename)
+++     && ld_sysroot)
++ 	{
++ 	  char *name = concat (ld_sysroot, entry->filename,
++ 			       (const char *) NULL);
++ 	  if (ldfile_try_open_bfd (name, entry))
++ 	    {
++ 	      entry->filename = name;
+++	      entry->flags.sysrooted = true;
++ 	      return true;
++ 	    }
++ 	  free (name);
++ 	}
++-      else if (ldfile_try_open_bfd (entry->filename, entry))
+++      if (ldfile_try_open_bfd (entry->filename, entry))
++ 	return true;
++ 
++       if (IS_ABSOLUTE_PATH (entry->filename))
++-- 
++2.36.1
++
+diff --git a/package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch b/package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch
+new file mode 100644
+index 00000000..7674fa3a
+--- /dev/null
++++ b/package/binutils/2.41/9001-add-sysroot-fix-from-bug-3049.patch
+@@ -0,0 +1,53 @@
++From dc372679aa22f0a5341891924ccfce1e64537fd6 Mon Sep 17 00:00:00 2001
++From: Romain Naour <romain.naour@gmail.com>
++Date: Fri, 25 Dec 2015 11:42:48 +0100
++Subject: [PATCH] add sysroot fix from bug #3049
++
++Always try to prepend the sysroot prefix to absolute filenames first.
++
++http://bugs.gentoo.org/275666
++http://sourceware.org/bugzilla/show_bug.cgi?id=10340
++
++Signed-off-by: Sven Rebhan <odinshorse@googlemail.com>
++[Romain: rebase on top of 2.26]
++Signed-off-by: Romain Naour <romain.naour@gmail.com>
++[bcressey: rebase on top of 2.38]
++Signed-off-by: Ben Cressey <bcressey@amazon.com>
++---
++ ld/ldfile.c | 10 ++++++++--
++ 1 file changed, 8 insertions(+), 2 deletions(-)
++
++diff --git a/ld/ldfile.c b/ld/ldfile.c
++index 731ae5f7aed..7fda926c03c 100644
++--- a/ld/ldfile.c
+++++ b/ld/ldfile.c
++@@ -340,18 +340,24 @@ ldfile_open_file_search (const char *arch,
++      directory first.  */
++   if (!entry->flags.maybe_archive)
++     {
++-      if (entry->flags.sysrooted && IS_ABSOLUTE_PATH (entry->filename))
+++     /* For absolute pathnames, try to always open the file in the
+++	 sysroot first. If this fails, try to open the file at the
+++	 given location.  */
+++     entry->flags.sysrooted = is_sysrooted_pathname (entry->filename);
+++     if (!entry->flags.sysrooted && IS_ABSOLUTE_PATH (entry->filename)
+++     && ld_sysroot)
++ 	{
++ 	  char *name = concat (ld_sysroot, entry->filename,
++ 			       (const char *) NULL);
++ 	  if (ldfile_try_open_bfd (name, entry))
++ 	    {
++ 	      entry->filename = name;
+++	      entry->flags.sysrooted = true;
++ 	      return true;
++ 	    }
++ 	  free (name);
++ 	}
++-      else if (ldfile_try_open_bfd (entry->filename, entry))
+++      if (ldfile_try_open_bfd (entry->filename, entry))
++ 	return true;
++ 
++       if (IS_ABSOLUTE_PATH (entry->filename))
++-- 
++2.36.1
++
+diff --git a/package/musl-compat-headers/musl-compat-headers.hash b/package/musl-compat-headers/musl-compat-headers.hash
+index 626145df..82e95286 100644
+--- a/package/musl-compat-headers/musl-compat-headers.hash
++++ b/package/musl-compat-headers/musl-compat-headers.hash
+@@ -1,2 +1,2 @@
+ # Locally calculated
+-sha256  c13407edd0e33be73cae72514cb234f8612e1c0e54401c9448daffd3a240158b  queue.h?rev=1.70
++sha256  426ea7160330259da0540dc0a8cee07ddef6867570af84fd45802b62248b3f86  queue.h?rev=1.70
+-- 
+2.40.1
+
