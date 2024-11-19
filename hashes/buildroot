@@ -9,7 +9,7 @@ SHA512 (gawk-5.2.0.tar.xz) = e81e1efb1be06f82602e704d10e8de4b78797d058d9718d353e
 # https://mirrors.kernel.org/gnu/gcc/gcc-11.4.0/gcc-11.4.0.tar.xz
 SHA512 (gcc-11.4.0.tar.xz) = a5018bf1f1fa25ddf33f46e720675d261987763db48e7a5fdf4c26d3150a8abcb82fdc413402df1c32f2e6b057d9bae6bdfa026defc4030e10144a8532e60f14
 # https://github.com/bminor/glibc/archive/b4e23c75aea756b4bddc4abcf27a1c6dca8b6bd3.tar.gz
-SHA512 (glibc-2.37-45-gb4e23c75aea756b4bddc4abcf27a1c6dca8b6bd3.tar.gz) = fdd439b7fceaca9e2e8d01074297ba5bf4d1aa6fb3a7bbe5cd430679271447d08901447ea7cb0eb5efbdb07379d69bb8bcf38a9bd5f2ba1497d3f652ebad35b5
+SHA512 (glibc-2.37-45-gb4e23c75aea756b4bddc4abcf27a1c6dca8b6bd3.tar.gz) = cda9cd4a439921076699674dd85ac411b890bd709282b65a7cffc3f878554e4573773061702c9fd517e6fc77c6ecbf152e371be6bfd011b48d687b28bcafdf08
 # https://mirrors.kernel.org/gnu/gmp/gmp-6.2.1.tar.xz
 SHA512 (gmp-6.2.1.tar.xz) = c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
 # https://libisl.sourceforge.io/isl-0.25.tar.xz
