@@ -83,7 +83,7 @@ RUN \
   git config --global user.email "builder@localhost"
 
 ARG UPSTREAM_SOURCE_FALLBACK
-ENV BRVER="2023.05.3"
+ENV BRVER="2023.08.4"
 ENV KVER="5.10.194"
 
 WORKDIR /home/builder
